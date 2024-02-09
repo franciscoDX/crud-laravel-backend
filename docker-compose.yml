@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  php:
+    image: webdevops/php-apache-dev:8.3-alpine
+    working_dir: /app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public/
+      - XDEBUG_START_WITH_REQUEST=yes
+      - XDEBUG_MODE=off
+    volumes:
+      - .:/app
+    ports:
+      - 8000:80
+    depends_on: [mariadb]
+
+  mariadb:
+    image: mariadb:10.4.22
+    volumes:
+      - database:/var/lib/mysql
+      - .:/app
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crudexampledb
+      MYSQL_USER: crudexample
+      MYSQL_PASSWORD: crudexample
+
+volumes:
+  database:
